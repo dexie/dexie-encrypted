@@ -9,7 +9,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/mark43/dexie-encrypted.git"
+        "url": "https://github.com/dexie/dexie-encrypted.git"
     },
     "dependencies": {
         "@stablelib/utf8": "1.0.2",
