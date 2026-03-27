@@ -175,6 +175,11 @@ export function installHooks<T extends Dexie>(
                                             return cursor.key;
                                         },
                                     },
+                                    primaryKey: {
+                                        get() {
+                                            return cursor.primaryKey;
+                                        },
+                                    },
                                     value: {
                                         get() {
                                             return decrypt(cursor.value);
