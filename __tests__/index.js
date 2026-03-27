@@ -495,6 +495,34 @@ describe('Encrypting', () => {
         `);
     });
 
+    it('should work with anyOf on primary key followed by modify', async () => {
+        const db = new Dexie('anyof-modify');
+        applyEncryptionMiddleware(
+            db,
+            keyPair.publicKey,
+            {
+                friends: cryptoOptions.NON_INDEXED_FIELDS,
+            },
+            clearAllTables,
+            new Uint8Array(24)
+        );
+
+        db.version(1).stores({
+            friends: 'id',
+        });
+
+        await db.open();
+        await db.friends.put({ id: 'alice', name: 'Alice', age: 30 });
+
+        // Bug: primaryKey was missing from the cursor proxy, causing primaryKeys()
+        // to collect no keys via the each() fallback, so modify() would modify 0 rows.
+        const count = await db.friends.where('id').anyOf(['alice']).modify({ age: 31 });
+        expect(count).toBe(1);
+
+        const after = await db.friends.get('alice');
+        expect(after.age).toBe(31);
+    });
+
     it('should work with bulkGet', async () => {
         const db = new Dexie('anyof');
         applyEncryptionMiddleware(
