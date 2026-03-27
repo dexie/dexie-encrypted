@@ -9,6 +9,7 @@ jobs:
     name: Publish canary to npm
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       id-token: write  # required for OIDC Trusted Publisher
 
     steps:
@@ -21,9 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      - name: Configure npm registry
-        run: echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install
